@@ -153,8 +153,3 @@ resource "azurerm_subnet_network_security_group_association" "nsg-link" {
   network_security_group_id = azurerm_network_security_group.nsg1.id
 }
 
-resource "azurerm_marketplace_agreement" "almalinux" {
-  publisher = "almalinux"
-  offer     = "almalinux"
-  plan      = "almalinux"
-}
