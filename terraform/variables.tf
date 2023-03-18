@@ -35,3 +35,23 @@ variable "vm_specs" {
     public_key     = "~/.ssh/id_rsa.pub"
   }
 }
+
+variable "osimage_specs" {
+  type = object({
+    name      = string
+    product   = string
+    publisher = string
+    offer     = string
+    sku       = string
+    version   = string
+  })
+
+  default = {
+    name      = "8_5"
+    product   = "almalinux"
+    publisher = "almalinux"
+    offer     = "almalinux"
+    sku       = "8_5"
+    version   = "8.5.20220311"
+  }
+}
