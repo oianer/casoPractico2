@@ -116,17 +116,17 @@ resource "azurerm_linux_virtual_machine" "vm" {
   }
 
   plan {
-    name      = "centos-8-stream-free"
-    product   = "centos-8-stream-free"
-    publisher = "cognosys"
+    name      = var.osimage_specs.name
+    product   = var.osimage_specs.product
+    publisher = var.osimage_specs.publisher
   }
 
 
   source_image_reference {
-    publisher = "cognosys"
-    offer     = "centos-8-stream-free"
-    sku       = "centos-8-stream-free"
-    version   = "22.03.28"
+    publisher = var.osimage_specs.publisher
+    offer     = var.osimage_specs.offer
+    sku       = var.osimage_specs.sku
+    version   = var.osimage_specs.version
   }
 }
 
