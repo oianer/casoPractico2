@@ -3,5 +3,5 @@ output "resource_group_id" {
 }
 
 output "vm_id" {
-  value = azurerm_linux_virtual_machine.vm.id
+  value = azurerm_linux_virtual_machine.vm[count_index]
 }
