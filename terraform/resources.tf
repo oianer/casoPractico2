@@ -17,116 +17,24 @@ resource "azurerm_subnet" "subnet" {
   address_prefixes     = ["10.0.2.0/24"]
 }
 
-resource "azurerm_network_interface" "nic" {
-  name                = "vnic"
-  location            = azurerm_resource_group.rg.location
-  resource_group_name = azurerm_resource_group.rg.name
-
-  ip_configuration {
-    name                          = "internal"
-    subnet_id                     = azurerm_subnet.subnet.id
-    private_ip_address_allocation = "Dynamic"
-  }
-}
-
 resource "azurerm_public_ip" "pip" {
-  name                = "public_ip"
+  name                = "VIP"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
   allocation_method   = "Static"
   sku                 = "Standard"
 }
 
-resource "azurerm_lb" "lb" {
-  name                = "lb1"
+resource "azurerm_network_interface" "nic" {
+  name                = "vnic"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
-  sku                 = "Standard"
-
-  frontend_ip_configuration {
-    name                 = "fe1"
-    public_ip_address_id = azurerm_public_ip.pip.id
-  }
-}
-
-resource "azurerm_lb_rule" "lb_rule" {
-  loadbalancer_id                = azurerm_lb.lb.id
-  name                           = "http-rule"
-  protocol                       = "Tcp"
-  frontend_port                  = 80
-  backend_port                   = 80
-  frontend_ip_configuration_name = "fe1"
-  probe_id                       = azurerm_lb_probe.http-probe.id
-  backend_address_pool_ids       = ["${azurerm_lb_backend_address_pool.be_pool.id}"]
-}
-
-resource "azurerm_lb_backend_address_pool" "be_pool" {
-  loadbalancer_id = azurerm_lb.lb.id
-  name            = "be"
-}
-
-resource "azurerm_network_interface_backend_address_pool_association" "be_pool_association" {
-  count                   = 3
-  network_interface_id    = azurerm_network_interface.vnic.*.id[count.index]
-  ip_configuration_name   = azurerm_network_interface.vnic.*.ip_configuration.0.name[count.index]
-  backend_address_pool_id = azurerm_lb_backend_address_pool.be_pool.id
-}
-
-resource "azurerm_lb_probe" "http-probe" {
-  loadbalancer_id = azurerm_lb.lb.id
-  name            = "probe"
-  protocol        = "Http"
-  port            = 80
-  request_path    = "/"
-}
-
-resource "azurerm_network_interface" "vnic" {
-  count               = 3
-  name                = "vnic-${count.index}"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
 
   ip_configuration {
-    name                          = "ipconfig-${count.index}"
+    name                          = "externa"
     subnet_id                     = azurerm_subnet.subnet.id
     private_ip_address_allocation = "Dynamic"
-  }
-}
-
-
-resource "azurerm_linux_virtual_machine" "vm" {
-  count               = var.vm_specs.count
-  name                = "${var.vm_specs.basename}${count.index}"
-  resource_group_name = azurerm_resource_group.rg.name
-  location            = azurerm_resource_group.rg.location
-  size                = var.vm_specs.size
-  admin_username      = var.vm_specs.admin_username
-  network_interface_ids = [
-    azurerm_network_interface.vnic[count.index].id,
-  ]
-
-  admin_ssh_key {
-    username   = var.vm_specs.username
-    public_key = file("${var.vm_specs.public_key}")
-  }
-
-  os_disk {
-    caching              = "ReadWrite"
-    storage_account_type = "Standard_LRS"
-  }
-
-  plan {
-    name      = var.osimage_specs.name
-    product   = var.osimage_specs.product
-    publisher = var.osimage_specs.publisher
-  }
-
-
-  source_image_reference {
-    publisher = var.osimage_specs.publisher
-    offer     = var.osimage_specs.offer
-    sku       = var.osimage_specs.sku
-    version   = var.osimage_specs.version
+	public_ip_address_id          = azurerm_public_ip.pip.id
   }
 }
 
@@ -136,20 +44,68 @@ resource "azurerm_network_security_group" "nsg1" {
   resource_group_name = azurerm_resource_group.rg.name
 
   security_rule {
-    name                       = "httprule"
+    name                       = "SSH"
     priority                   = 1001
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
     source_port_range          = "*"
-    destination_port_range     = "80"
+    destination_port_range     = "22"
     source_address_prefix      = "*"
     destination_address_prefix = "*"
   }
 }
 
-resource "azurerm_subnet_network_security_group_association" "nsg-link" {
-  subnet_id                 = azurerm_subnet.subnet.id
+
+resource "azurerm_network_interface_security_group_association" "example" {
+  network_interface_id      = azurerm_network_interface.nic.id
   network_security_group_id = azurerm_network_security_group.nsg1.id
 }
 
+resource "azurerm_subnet_network_security_group_association" "nsg-link" {
+  subnet_id      = azurerm_subnet.subnet.id
+  network_security_group_id = azurerm_network_security_group.nsg1.id
+}
+
+resource "azure_network_security_role", "http" {
+  name		      = "http"
+  priority	      = 1002
+  direction	      = "Inbound"
+  access	      = "Allow"
+  protocol                   = "Tcp"
+  source_port_range          = "*"
+  destination_port_range     = "8080"
+  source_address_prefix      = "*"
+  destination_address_prefix = "*"
+  resource_group_name	= azurerm_resource_group.rg.name
+  network_security_group_name = azurerm_network_security_group.nsg1.name
+}	
+
+resource "azurerm_linux_virtual_machine" "vm" {
+  name                = "vm1"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+#  size                = "Standard_F2"
+  size                = "Standard_F2s_v2"	
+  admin_username      = "azureuser"
+  network_interface_ids = [
+    azurerm_network_interface.nic.id,
+  ]
+
+  admin_ssh_key {
+    username   = "azureuser"
+    public_key = file("~/.ssh/id_rsa.pub")
+  }
+
+  os_disk {
+    caching              = "ReadWrite"
+    storage_account_type = "Standard_LRS"
+  }
+
+  source_image_reference {
+    publisher = "Canonical"
+    offer     = "0001-com-ubuntu-server-jammy"
+    sku       = "22_04-lts-gen2"
+    version   = "22.04.202303090"
+  }
+}
