@@ -9,4 +9,4 @@ La estructura del repositorio es la siguiente:
 - Directorio ansible: con los ficheros que realizan la configuración de las aplicaciones.
 
 ## Licencia
-Creative Commons Attribution 4.0
+GNU General Public License v3.0
