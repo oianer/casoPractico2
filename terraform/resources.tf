@@ -117,3 +117,14 @@ resource "azurerm_linux_virtual_machine" "vm" {
     version   = "22.04.202303090"
   }
 }
+
+# Creación container Registry
+resource "azurerm_container_registry" "acr" {
+  name                = "acr1"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  sku                 = "Basic"
+  admin_enabled       = true
+  tags                = var.acr_tag
+}
+
