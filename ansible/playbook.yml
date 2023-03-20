@@ -16,7 +16,7 @@
       state: latest
 
   - name: Create Podman Container
-    podman_container:
+    containers.podman.podman_image:
       name: "{{ container_name }}"
       image: "{{ container_image }}"
       state: started
