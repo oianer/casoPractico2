@@ -129,6 +129,24 @@ resource "azurerm_container_registry" "acr1" {
 
 
 # Creación cluster k8s
+
+resource "azurerm_user_assigned_identity" "uaid" {
+  name                = "aksidentity"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+}
+
+resource "azurerm_private_dns_zone" "privatednszone" {
+  name                = "oruizmoprivatedns"
+  resource_group_name = azurerm_resource_group.rg.name
+}
+
+resource "azurerm_role_assignment" "roleass" {
+  scope                = azurerm_private_dns_zone.privatednszone.id
+  role_definition_name = "Contribuidor"
+  principal_id         = azurerm_user_assigned_identity.uaid.principal_id
+}
+
 resource "azurerm_kubernetes_cluster" "k8s" {
   location            = azurerm_resource_group.rg.location
   name                = "oruizmok8s"
@@ -140,6 +158,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     vm_size    = "Standard_D2_v2"
     node_count = 1
   }
+  
   linux_profile {
     admin_username = "azureuser"
 
@@ -151,8 +170,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     network_plugin    = "kubenet"
     load_balancer_sku = "standard"
   }
-  service_principal {
-    client_id     = "aksclientid"
-    client_secret = "aksclientsecret"
-  }
+  depends_on = [
+    azurerm_role_assignment.roleass,
+  ]
 }
