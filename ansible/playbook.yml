@@ -9,7 +9,7 @@
     httpasswd_password: mypassword
   tasks:
   - name: Install Podman and Apache Web Server
-    dnf:
+    apt:
       name:
         - podman
         - httpd
