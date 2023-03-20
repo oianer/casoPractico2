@@ -114,7 +114,22 @@
 #      daemon_reload: yes 
 #      name: webserver
 
-  - name: ACR login
+  - name: Registry login
     containers.podman.podman_login:
-      username: user
-      password: 'p4ssw0rd'
+      username: oruizmoacrcp2
+      password: 'KqUSF6MLbIJO8l/cVa0vm+iiJmJ2MNSWnUZbBBsPgE+ACRAlrkOZ'
+      registry: oruizmoacrcp2.azurecr.io
+      
+  - name: Tag image to registry
+    containers.podman.podman_tag:
+      image: docker.io/library/httpd
+      target_names:
+        - oruizmoacrcp2.azurecr.io/casopractico2/httpd
+
+  - name: Push image to registry
+    containers.podman.podman_image:
+      name: docker.io/library/httpd
+      push: yes
+      tag: "casopractico2"
+      push_args:
+        dest: oruizmoacrcp2.azurecr.io/casopractico2/httpd
