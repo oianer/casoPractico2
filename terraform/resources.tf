@@ -88,10 +88,10 @@ resource "azurerm_network_security_rule" "http" {
   network_security_group_name = azurerm_network_security_group.nsg1.name
 }	
 
-# Se crea la máquina virtual "oruizmo" con sistema operativo Ubuntu 22_04, con la interfaz de red definida anteriormente, 
-# la clave pública ssh del equipo en el que corre, y un disco estándar
+# Se crea la máquina virtual con sistema operativo Ubuntu 22_04, con la interfaz de red definida anteriormente, 
+# la clave pública ssh del equipo en el que corre, y un disco estándar. El nombre de la máquina virtual está en el fichero de variables.
 resource "azurerm_linux_virtual_machine" "vm" {
-  name                = "oruizmo"
+  name                = var.vm_name
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   size                = "Standard_F2s_v2"	
