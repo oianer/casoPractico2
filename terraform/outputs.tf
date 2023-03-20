@@ -11,7 +11,10 @@ output "vm_pip" {
   value = azurerm_linux_virtual_machine.vm.public_ip_address
 }
 
-output "acr_pass" {
+output "acr_pass1" {
   value = azurerm_container_registry.acr.admin_password
+}
+
+output "acr_pass2" {
   value = azurerm_container_registry.acr.admin_password2
 }
