@@ -90,7 +90,7 @@ resource "azurerm_network_security_rule" "http" {
 
 # Se crea la máquina virtual con sistema operativo Ubuntu 22_04, con la interfaz de red definida anteriormente, 
 # la clave pública ssh del equipo en el que corre, y un disco estándar. El nombre de la máquina virtual está en el fichero de variables.
-resource "azurerm_linux_virtual_machine" "vm1" {
+resource "azurerm_linux_virtual_machine" "vm" {
   name                = var.vm_name
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
@@ -120,7 +120,7 @@ resource "azurerm_linux_virtual_machine" "vm1" {
 
 # Creación container Registry
 resource "azurerm_container_registry" "acr1" {
-  name                = "containerregistry"
+  name                = "oruizmo_acr"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   sku                 = "Basic"
