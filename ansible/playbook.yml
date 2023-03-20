@@ -109,7 +109,13 @@
 
   - name: Restart Apache
     become: true
-    systemd:
+    ansible.builtin.systemd:
+      name: httpd
       state: restarted
-      daemon_reload: yes 
-      name: webserver
+      
+#  - name: Restart Apache
+#    become: true
+#    systemd:
+#      state: restarted
+#      daemon_reload: yes 
+#      name: webserver
