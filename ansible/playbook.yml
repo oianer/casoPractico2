@@ -126,3 +126,32 @@
       push: yes
       push_args:
         dest: oruizmoacrcp2.azurecr.io/casopractico2/httpd
+        
+ 
+---
+- name: Configure Kubernetes cluster 
+  hosts: k8scluster 
+  remote_user: azureuser
+  become: yes
+
+  - name: Install kubernetes library
+    become: true
+    pip: 
+      name: kubernetes
+
+  - name: Install PyYAML library
+    become: true
+    pip: 
+      name: PyYAML
+      
+  - name: Install jsonpatch library
+    become: true
+    pip: 
+      name: jsonpatch
+
+  - name: Create k8s namespace
+    kubernetes.core.k8s:
+      name: oruizmons
+      api_version: v1
+      kind: Namespace
+      state: present
