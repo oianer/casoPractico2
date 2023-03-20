@@ -30,8 +30,7 @@
   - name: custom index.html
     ansible.builtin.copy:
       dest: "{{ webroot }}/index.html"
-      content: |
-                  Custom Web Page
+      content: "<html><head>HOLA MUNDO</head><body>HOLA MUNDO, desplegado con Ansible</body></html>"
       setype: "container_share_t"
 
   - name: run httpd container
@@ -47,35 +46,18 @@
       volume:
         - "{{ webroot }}:/usr/local/apache2/htdocs/:exec"
 
-#  - name: Create Apache container
-#    become: true
-#    containers.podman.podman_container:
-#      name: apache-webserver
-#      image: fedora:latest
-#      state: started
-#      ports:
-#        - 80:80
-#      command: "/usr/sbin/httpd -DFOREGROUND"
-
-#  - name: Create HTML directory and file
-#    become: true
-#    copy:
-#      content: "HELLO WORLD"
-#      dest: "/var/www/html/index.html"
-#      dest: "/var/www/html"
-#      state: directory
-#      mode: '0755'
-
-#  - name: Add data to file
-#    copy:
-#      content: "HELLO WORLD"
-#      dest: "/var/www/html/index.html"
+  - name: Generate an OpenSSL private key
+    openssl_privatekey:
+      path: /etc/pki/tls/private/apache.key
+      size: "2048"
+      type: "rsa"
+      backup: yes
 
   - name: Generate x.509 self-signed certificate
     become: true
     openssl_certificate:
       path: /etc/pki/tls/certs/apache.crt
-#      privatekey_path: /etc/pki/tls/private/apache.key
+      privatekey_path: /etc/pki/tls/private/apache.key
 #      common_name: "localhost"
 #      type: "rsa"
 #      size: "2048"
