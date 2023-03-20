@@ -1,3 +1,4 @@
+# Variables del despliegue. Especificamos el nombre del resource group, su localización (sur de UK), el nombre de la red, de la subred y de la máquina virtual
 variable "resource_group_name" {
   default = "oruizmo_cp2_rg"
 }
@@ -12,4 +13,8 @@ variable "network_name" {
 
 variable "subnet_name" {
   default = "subnet1"
+}
+
+variable "vm_name" {
+  default = "oruizmo"
 }
