@@ -76,10 +76,10 @@
     openssl_certificate:
       path: /etc/pki/tls/certs/apache.crt
       privatekey_path: /etc/pki/tls/private/apache.key
-      common_name: "localhost"
-      type: "rsa"
-      size: "2048"
-      days: "365"
+#      common_name: "localhost"
+#      type: "rsa"
+#      size: "2048"
+#      days: "365"
       state: present
       provider: selfsigned
 #      selfsigned: true
