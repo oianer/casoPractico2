@@ -110,5 +110,6 @@
   - name: Restart Apache
     become: true
     systemd:
-      name: webserver
       state: restarted
+      daemon_reload: true 
+      name: httpd
