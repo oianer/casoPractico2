@@ -13,4 +13,5 @@ output "vm_pip" {
 
 output "acr_pass" {
   value = azurerm_container_registry.acr.admin_password
+  sensitive = true
 }
