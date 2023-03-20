@@ -4,14 +4,14 @@ output "resource_group_id" {
 }
 
 output "vm_id" {
-  value = azurerm_linux_virtual_machine.vm.id
+  value = azurerm_linux_virtual_machine.vm1.id
 }
 
 output "vm_pip" {
-  value = azurerm_linux_virtual_machine.vm.public_ip_address
+  value = azurerm_linux_virtual_machine.vm1.public_ip_address
 }
 
 output "acr_pass" {
-  value = azurerm_container_registry.acr.admin_password
+  value = azurerm_container_registry.acr1.admin_password
   sensitive = true
 }
