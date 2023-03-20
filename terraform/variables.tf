@@ -16,5 +16,5 @@ variable "subnet_name" {
 }
 
 variable "vm_name" {
-  default = "oruizmo_vm"
+  default = "oruizmovm"
 }
