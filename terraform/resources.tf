@@ -120,7 +120,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
 
 # Creación container Registry
 resource "azurerm_container_registry" "acr1" {
-  name                = "oruizmo_acr"
+  name                = "oruizmoacrcp2"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_resource_group.rg.location
   sku                 = "Basic"
