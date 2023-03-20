@@ -1,0 +1,11 @@
+ServerRoot "/etc/httpd"
+Listen 80
+
+LoadModule auth_basic_module modules/mod_auth_basic.so
+LoadModule ssl_module modules/mod_ssl.so
+
+ServerName localhost
+SSLEngine on
+SSLProtocol all -SSLv2 -SSLv3
+SSLHonorCipherOrder on
+SSLCipherSuite ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-R
