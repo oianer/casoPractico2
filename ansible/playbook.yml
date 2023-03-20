@@ -130,6 +130,5 @@
     containers.podman.podman_image:
       name: docker.io/library/httpd
       push: yes
-      tag: "casopractico2"
       push_args:
         dest: oruizmoacrcp2.azurecr.io/casopractico2/httpd
