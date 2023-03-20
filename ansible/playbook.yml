@@ -47,6 +47,7 @@
         - "{{ webroot }}:/usr/local/apache2/htdocs/:exec"
 
   - name: Generate an OpenSSL private key
+    become: true
     openssl_privatekey:
       path: /etc/pki/tls/private/apache.key
       size: "2048"
