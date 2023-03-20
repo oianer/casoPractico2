@@ -1,4 +1,5 @@
 - name: Deploy Apache Web Server in Podman Container
+  hosts: all
   remote_user: azureuser
   become: true
   vars:
