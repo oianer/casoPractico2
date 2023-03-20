@@ -1,5 +1,5 @@
 - name: Despliegue Servidor Web Apache en contenedor Podman
-  hosts: webserverApache
+  hosts: all
   remote_user: azureuser
   vars:
     webroot: "/webroot"
@@ -130,7 +130,7 @@
  
 ---
 - name: Configure Kubernetes cluster 
-  hosts: k8scluster 
+  hosts: all 
   remote_user: azureuser
   become: yes
 
