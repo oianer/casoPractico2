@@ -1,5 +1,5 @@
 - name: Despliegue Servidor Web Apache en contenedor Podman
-  hosts: all
+  hosts: webserverApache
   remote_user: azureuser
   vars:
     webroot: "/webroot"
@@ -106,13 +106,6 @@
       src: templates/httpd.conf.j2
       dest: /etc/httpd/conf/httpd.conf
       mode: '0644'
-      
-#  - name: Restart Apache
-#    become: true
-#    systemd:
-#      state: restarted
-#      daemon_reload: yes 
-#      name: webserver
 
   - name: Registry login
     containers.podman.podman_login:
@@ -128,10 +121,6 @@
 
   - name: Push image to registry
     containers.podman.podman_image:
-#      name: docker.io/library/httpd
-#      push: yes
-#      push_args:
-#        dest: oruizmoacrcp2.azurecr.io/casopractico2/httpd
       name: httpd
       path: docker.io/library/httpd
       push: yes
