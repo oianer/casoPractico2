@@ -1,4 +1,4 @@
-- name: Deploy Apache Web Server in Podman container
+- name: Despliegue Servidor Web Apache en contenedor Podman
   hosts: all
   remote_user: azureuser
   vars:
@@ -17,7 +17,7 @@
       name: fedora:latest
       pull: true
 
-  - name: Crear webroot present
+  - name: Create webroot 
     become: true
     ansible.builtin.file:
       path: "{{ webroot }}"
@@ -27,13 +27,13 @@
       mode: '0777'
       setype: "container_share_t"
 
-  - name: Crear fichero index.html
+  - name: Create index.html file
     ansible.builtin.copy:
       dest: "{{ webroot }}/index.html"
       content: "<html><head>HOLA MUNDO</head><body>HOLA MUNDO, desplegado con Ansible</body></html>"
       setype: "container_share_t"
 
-  - name: run httpd container
+  - name: Run httpd container
     containers.podman.podman_container:
       name: webserver
       image: httpd
@@ -46,7 +46,7 @@
       volume:
         - "{{ webroot }}:/usr/local/apache2/htdocs/:exec"
 
-  - name: Generar directorio private key
+  - name: Generate private key folder
     become: true
     ansible.builtin.file:
       path: "/etc/pki/tls/private"
@@ -56,7 +56,7 @@
       mode: '0777'
       setype: "container_share_t"
 
-  - name: Generate an OpenSSL private key
+  - name: Generate OpenSSL private key
     become: true
     openssl_privatekey:
       path: /etc/pki/tls/private/apache.key
@@ -69,13 +69,8 @@
     openssl_certificate:
       path: /etc/pki/tls/certs/apache.crt
       privatekey_path: /etc/pki/tls/private/apache.key
-#      common_name: "localhost"
-#      type: "rsa"
-#      size: "2048"
-#      days: "365"
       state: present
       provider: selfsigned
-#      selfsigned: true
 
   - name: Install htpasswd
     become: true
@@ -83,9 +78,10 @@
       name: httpd-tools
       state: present
 
-  - name: Instalar libreria passlib
+  - name: Install passlib library
     become: true
-    pip: name=passlib
+    pip: 
+      name: passlib
       
   - name: Create Apache basic authentication user
     become: true
@@ -94,7 +90,7 @@
       name: oruizmo
       password: "helloworld"
 
-  - name: Generar directorio configuracion Apache
+  - name: Generate Apache config folder
     become: true
     ansible.builtin.file:
       path: "/etc/httpd/conf"
@@ -114,5 +110,5 @@
   - name: Restart Apache
     become: true
     systemd:
-      name: httpd
+      name: webserver
       state: restarted
