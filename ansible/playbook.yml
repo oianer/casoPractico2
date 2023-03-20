@@ -128,7 +128,7 @@
         dest: oruizmoacrcp2.azurecr.io/casopractico2/httpd
         
  
----
+# Kubernetes cluster configuration
 - name: Configure Kubernetes cluster 
   hosts: all 
   remote_user: azureuser
