@@ -135,7 +135,6 @@ resource "azurerm_container_registry" "acr1" {
 
 
 # Creación cluster k8s
-
 resource "azurerm_kubernetes_cluster" "k8s" {
   name                = "oruizmok8s"
   location            = azurerm_resource_group.rg.location
@@ -151,18 +150,6 @@ resource "azurerm_kubernetes_cluster" "k8s" {
   identity {
     type = "SystemAssigned"
   }
-  
-#  linux_profile {
-#    admin_username = "azureuser"
-
-#    ssh_key {
-#      key_data = file("~/.ssh/id_rsa.pub")
-#    }
-#  }
-#  network_profile {
-#    network_plugin    = "kubenet"
-#    load_balancer_sku = "standard"
-#  }
 
 }
 
