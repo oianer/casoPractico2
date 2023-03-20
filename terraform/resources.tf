@@ -158,6 +158,10 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     vm_size    = "Standard_D2_v2"
     node_count = 1
   }
+
+  identity {
+    type = "SystemAssigned"
+  }
   
   linux_profile {
     admin_username = "azureuser"
@@ -170,7 +174,7 @@ resource "azurerm_kubernetes_cluster" "k8s" {
     network_plugin    = "kubenet"
     load_balancer_sku = "standard"
   }
-  depends_on = [
-    azurerm_role_assignment.roleass,
-  ]
+#  depends_on = [
+#    azurerm_role_assignment.roleass,
+#  ]
 }
