@@ -1,74 +1,74 @@
-- name: Deploy Apache Web Server in Podman Container
+- name: Deploy Apache Web Server in Podman container
   hosts: all
   remote_user: azureuser
-  become: true
-  vars:
-    container_name: apache_container
-    container_image: fedora
-    httpasswd_user: myuser
-    httpasswd_password: mypassword
-  tasks:
-  - name: Install Podman and Apache Web Server
-    apt:
-      name:
-        - podman
-        - httpd
-      state: latest
 
-  - name: Create Podman Container
-    containers.podman.podman_image:
-      name: "{{ container_name }}"
-      image: "{{ container_image }}"
+  tasks:
+  - name: Install Podman
+    become: true
+    dnf:
+      name: podman
+      state: present
+
+  - name: Pull Fedora image
+    become: true
+    podman_image:
+      name: fedora:latest
+      pull: true
+
+  - name: Create Apache container
+    become: true
+    podman_container:
+      name: apache-webserver
+      image: fedora:latest
       state: started
       ports:
-        - "80:80"
-        - "443:443"
-      volumes:
-        - "/var/www/html:/var/www/html"
-        - "/etc/pki/tls/certs:/etc/pki/tls/certs"
-        - "/etc/pki/tls/private:/etc/pki/tls/private"
-      env:
-        - "LANG=en_US.UTF-8"
-      tty: true
+        - 80:80
+      command: "/usr/sbin/httpd -DFOREGROUND"
 
-  - name: Generate SSL Certificate
-    command: openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/pki/tls/private/server.key -out /etc/pki/tls/certs/server.crt -subj "/CN=example.com/O=My Company Name/L=My City/ST=My State/C=My Country"
-
-  - name: Configure Apache Web Server
+  - name: Create HTML directory and file
+    become: true
+    file:
+      path: "/var/www/html"
+      state: directory
+      mode: '0755'
     copy:
-      dest: /etc/httpd/conf.d/ssl.conf
-      content: |
-        LoadModule ssl_module modules/mod_ssl.so
-        Listen 443 https
-        <VirtualHost *:443>
-          ServerName example.com
-          DocumentRoot /var/www/html
-          SSLEngine on
-          SSLCertificateFile /etc/pki/tls/certs/server.crt
-          SSLCertificateKeyFile /etc/pki/tls/private/server.key
-        </VirtualHost>
-      validate: /usr/sbin/apachectl -t
-    notify:
-      - restart httpd
+      content: "HELLO WORLD"
+      dest: "/var/www/html/index.html"
 
-  - name: Add Basic Auth
-    command: htpasswd -bc /etc/httpd/.htpasswd "{{ httpasswd_user }}" "{{ httpasswd_password }}"
+  - name: Generate x.509 self-signed certificate
+    become: true
+    openssl_certificate:
+      path: /etc/pki/tls/certs/apache.crt
+      privatekey_path: /etc/pki/tls/private/apache.key
+      common_name: "localhost"
+      type: "rsa"
+      size: "2048"
+      days: "365"
+      state: present
+      selfsigned: true
 
-  - name: Create Web Page
-    copy:
-      dest: /var/www/html/index.html
-      content: |
-        <html>
-        <head>
-          <title>Hello World</title>
-        </head>
-        <body>
-          <h1>Hello World</h1>
-        </body>
-        </html>
+  - name: Install htpasswd
+    become: true
+    dnf:
+      name: httpd-tools
+      state: present
 
-  handlers:
-  - name: restart httpd
-    service:
+  - name: Create Apache basic authentication user
+    become: true
+    htpasswd:
+      path: /etc/httpd/.htpasswd
+      name: oruizmo
+      password: "helloworld"
+
+  - name: Configure Apache
+    become: true
+    template:
+      src: templates/httpd.conf.j2
+      dest: /etc/httpd/conf/httpd.conf
+      mode: '0644'
+
+  - name: Restart Apache
+    become: true
+    systemd:
       name: httpd
       state: restarted
