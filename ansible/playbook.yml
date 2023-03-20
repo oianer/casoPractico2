@@ -84,6 +84,7 @@
       state: present
 
   - name: Instalar libreria passlib
+    become: true
     pip: name=passlib
       
   - name: Create Apache basic authentication user
