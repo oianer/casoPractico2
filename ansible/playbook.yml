@@ -33,7 +33,7 @@
                   Custom Web Page
       setype: "container_share_t"
 
-   - name: run httpd container
+  - name: run httpd container
     containers.podman.podman_container:
       name: webserver
       image: httpd
