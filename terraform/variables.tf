@@ -1,4 +1,4 @@
-# Variables del despliegue. Especificamos el nombre del resource group, su localización (sur de UK), el nombre de la red, de la subred, de la máquina virtual y la etiqueta para las imágenes en el container registry
+# Variables del despliegue. Especificamos el nombre del resource group, su localización (sur de UK), el nombre de la red, de la subred, de la máquina virtual.
 variable "resource_group_name" {
   default = "oruizmo_cp2_rg"
 }
@@ -17,8 +17,4 @@ variable "subnet_name" {
 
 variable "vm_name" {
   default = "oruizmo_vm"
-}
-
-variable "acr_tag" {
-  default = "casopractico2"
 }
