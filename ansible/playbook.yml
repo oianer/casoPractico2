@@ -133,7 +133,8 @@
   hosts: all 
   remote_user: azureuser
   become: yes
-
+  
+  tasks:
   - name: Install kubernetes library
     become: true
     pip: 
