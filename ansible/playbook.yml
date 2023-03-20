@@ -106,12 +106,6 @@
       src: templates/httpd.conf.j2
       dest: /etc/httpd/conf/httpd.conf
       mode: '0644'
-
-  - name: Restart Apache
-    become: true
-    ansible.builtin.systemd:
-      name: httpd
-      state: restarted
       
 #  - name: Restart Apache
 #    become: true
@@ -119,3 +113,8 @@
 #      state: restarted
 #      daemon_reload: yes 
 #      name: webserver
+
+  - name: ACR login
+    containers.podman.podman_login:
+      username: user
+      password: 'p4ssw0rd'
