@@ -17,7 +17,7 @@
       name: fedora:latest
       pull: true
 
-  - name: webroot present
+  - name: Crear webroot present
     become: true
     ansible.builtin.file:
       path: "{{ webroot }}"
@@ -27,7 +27,7 @@
       mode: '0777'
       setype: "container_share_t"
 
-  - name: custom index.html
+  - name: Crear fichero index.html
     ansible.builtin.copy:
       dest: "{{ webroot }}/index.html"
       content: "<html><head>HOLA MUNDO</head><body>HOLA MUNDO, desplegado con Ansible</body></html>"
@@ -45,6 +45,16 @@
         - 8080:80
       volume:
         - "{{ webroot }}:/usr/local/apache2/htdocs/:exec"
+
+  - name: Generar directorio private key
+    become: true
+    ansible.builtin.file:
+      path: "/etc/pki/tls/private"
+      state: directory
+      owner: "root"
+      group: "root"
+      mode: '0777'
+      setype: "container_share_t"
 
   - name: Generate an OpenSSL private key
     become: true
