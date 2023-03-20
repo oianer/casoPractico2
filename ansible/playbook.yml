@@ -27,13 +27,17 @@
 
   - name: Create HTML directory and file
     become: true
-    file:
-      path: "/var/www/html"
-      state: directory
-      mode: '0755'
     copy:
       content: "HELLO WORLD"
       dest: "/var/www/html/index.html"
+#      dest: "/var/www/html"
+#      state: directory
+      mode: '0755'
+
+#  - name: Add data to file
+#    copy:
+#      content: "HELLO WORLD"
+#      dest: "/var/www/html/index.html"
 
   - name: Generate x.509 self-signed certificate
     become: true
