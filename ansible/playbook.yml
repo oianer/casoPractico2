@@ -81,7 +81,8 @@
       size: "2048"
       days: "365"
       state: present
-      selfsigned: true
+      provider: selfsigned
+#      selfsigned: true
 
   - name: Install htpasswd
     become: true
