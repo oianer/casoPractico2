@@ -143,7 +143,7 @@ resource "azurerm_private_dns_zone" "privatednszone" {
 
 resource "azurerm_role_assignment" "roleass" {
   scope                = azurerm_private_dns_zone.privatednszone.id
-  role_definition_name = "Contribuidor"
+  role_definition_name = "Contributor"
   principal_id         = azurerm_user_assigned_identity.uaid.principal_id
 }
 
