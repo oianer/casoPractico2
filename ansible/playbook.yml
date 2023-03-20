@@ -128,7 +128,12 @@
 
   - name: Push image to registry
     containers.podman.podman_image:
-      name: docker.io/library/httpd
+#      name: docker.io/library/httpd
+#      push: yes
+#      push_args:
+#        dest: oruizmoacrcp2.azurecr.io/casopractico2/httpd
+      name: httpd
+      path: docker.io/library/httpd
       push: yes
       push_args:
         dest: oruizmoacrcp2.azurecr.io/casopractico2/httpd
