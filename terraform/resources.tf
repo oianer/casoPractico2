@@ -127,3 +127,32 @@ resource "azurerm_container_registry" "acr1" {
   admin_enabled       = true
 }
 
+
+# Creación cluster k8s
+resource "azurerm_kubernetes_cluster" "k8s" {
+  location            = azurerm_resource_group.rg.location
+  name                = "oruizmok8s"
+  resource_group_name = azurerm_resource_group.rg.name
+  dns_prefix          = "oruizmok8s"
+
+  default_node_pool {
+    name       = "agentpool"
+    vm_size    = "Standard_D2_v2"
+    node_count = 1
+  }
+  linux_profile {
+    admin_username = "azureuser"
+
+    ssh_key {
+      key_data = file("~/.ssh/id_rsa.pub")
+    }
+  }
+  network_profile {
+    network_plugin    = "kubenet"
+    load_balancer_sku = "standard"
+  }
+  service_principal {
+    client_id     = "aksclientid"
+    client_secret = "aksclientsecret"
+  }
+}
