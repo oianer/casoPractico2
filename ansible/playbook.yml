@@ -83,6 +83,10 @@
       name: httpd-tools
       state: present
 
+  - name: Instalar libreria passlib
+    ansible.builtin.pip:
+      name: passlib
+      
   - name: Create Apache basic authentication user
     become: true
     htpasswd:
