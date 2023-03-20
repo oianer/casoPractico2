@@ -110,11 +110,17 @@ resource "azurerm_linux_virtual_machine" "vm" {
     storage_account_type = "Standard_LRS"
   }
 
+  plan {
+    name      = "centos-8-stream-free"
+    product   = "centos-8-stream-free"
+    publisher = "cognosys"
+  }
+
   source_image_reference {
-    publisher = "Canonical"
-    offer     = "0001-com-ubuntu-server-jammy"
-    sku       = "22_04-lts-gen2"
-    version   = "22.04.202303090"
+    publisher = "cognosys"
+    offer     = "centos-8-stream-free"
+    sku       = "centos-8-stream-free"
+    version   = "22.03.28"
   }
 }
 
