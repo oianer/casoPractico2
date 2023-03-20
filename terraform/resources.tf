@@ -137,7 +137,7 @@ resource "azurerm_user_assigned_identity" "uaid" {
 }
 
 resource "azurerm_private_dns_zone" "privatednszone" {
-  name                = "oruizmoprivatedns"
+  name                = "oruizmoprivatedns.azure.com"
   resource_group_name = azurerm_resource_group.rg.name
 }
 
