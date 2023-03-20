@@ -94,6 +94,16 @@
       name: oruizmo
       password: "helloworld"
 
+  - name: Generar directorio configuracion Apache
+    become: true
+    ansible.builtin.file:
+      path: "/etc/httpd/conf"
+      state: directory
+      owner: "root"
+      group: "root"
+      mode: '0777'
+      setype: "container_share_t"
+      
   - name: Configure Apache
     become: true
     template:
