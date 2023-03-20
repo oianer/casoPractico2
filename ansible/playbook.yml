@@ -18,6 +18,7 @@
       pull: true
 
   - name: webroot present
+    become: true
     ansible.builtin.file:
       path: "{{ webroot }}"
       state: directory
