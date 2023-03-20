@@ -50,7 +50,7 @@
     openssl_privatekey:
       path: /etc/pki/tls/private/apache.key
       size: "2048"
-      type: "rsa"
+      type: "RSA"
       backup: yes
 
   - name: Generate x.509 self-signed certificate
