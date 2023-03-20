@@ -16,7 +16,7 @@ variable "subnet_name" {
 }
 
 variable "vm_name" {
-  default = "oruizmo"
+  default = "oruizmo_vm"
 }
 
 variable "acr_tag" {
